@@ -108,19 +108,34 @@ async function run() {
 
         app.patch('/update-blog-status',async(req,res) => {
             const {blogId} = req.query;
-            const result = await allBlog.updateOne(
-                {
-                    _id: objectId(blogId),
-                },
-                {
-                    $set: {
-                        
-                    }
-                }
-            )
+            
 
             res.send(result);
         })
+
+        app.patch('/update-blog',async(req,res) => {
+            const {blogId} = req.query;
+            const data = req.body;
+            const filter = {_id: objectId(blogId)};
+            const updateBlog = {
+                $set: {
+                    blogName: data.blogName,
+                    travelerEmail: data.travelerEmail,
+                    travelerName: data.travelerName,
+                    travelCategory: data.travelCategory,
+                    travelCost: data.travelCost,
+                    travleLocation: data.travleLocation,
+                    sportImage: data.sportImage,
+                    reviewStar: data.reviewStar,
+                    travelDetails: data.travelDetails,
+                }
+            }
+
+            const result = await allBlog.updateOne(filter, updateBlog);
+            res.send(result);
+        })
+
+
 
         //ALL DELETE API
         app.delete('/delete-single-blog', async(req, res) => {
