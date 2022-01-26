@@ -80,7 +80,8 @@ async function run() {
 
         app.get('/single-blog', async (req, res) => {
             const {blogId} = req.query;
-            const result = await allBlog.find({_id: objectId(blogId)});
+            const result = await allBlog.findOne({_id: objectId(blogId)});
+            
             res.send(result);
         })
         
