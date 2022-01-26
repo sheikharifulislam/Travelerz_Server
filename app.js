@@ -3,8 +3,6 @@ const {MongoClient} = require('mongodb');
 const objectId = require('mongodb').ObjectId;
 const dotenv = require('dotenv').config();
 const cors = require('cors');
-
-const upload = require('./multer/multer.config');
 const app = express();
 
 
@@ -35,23 +33,31 @@ async function run() {
 
         app.get('/all-blog', async(req,res) => {
             const {status} = req.query;
-            let allBlog;
+            const {skip} = req.query;
+            const {limit} = req.query;
+            let result;
+
+            console.log(status);
 
             if(status) {
-                allBlog = await allBlog.find({
+                result = await allBlog.find({
                     status: status,
                 })
                 .toArray();
 
-                res.send(allBlog);
+                res.send(result);
             }
-            else {
-                allBlog = await allBlog.find({
-                    status: 'confirm',
-                })
-                .toArray();
+            else if(skip && limit && status) {
+                result = await allBlog.find(
+                    {
+                        status: status,
+                    }
+                )
+                .skip(skip)
+                .limit(limit)
+                .toArray()
 
-                res.send(allBlog);
+                res.send(result);
             }
         })
 
