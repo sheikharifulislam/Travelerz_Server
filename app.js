@@ -39,6 +39,44 @@ async function run() {
 
         // ALL GET API
 
+        app.get('/all-blog', async(req,res) => {
+            const {status} = req.query;
+            let allBlog;
+
+            if(status) {
+                allBlog = await allBlog.find({
+                    status: status,
+                })
+                .toArray();
+
+                res.send(allBlog);
+            }
+            else {
+                allBlog = await allBlog.find({
+                    status: 'confirm',
+                })
+                .toArray();
+
+                res.send(allBlog);
+            }
+        })
+
+        app.get('/check-admin',async(req,res) => {
+            const {userEmail} = req.query;
+            const user = await allUsers.findOne(
+                {
+                    email: userEmail
+                }
+            );
+    
+            let isAdmin = false;
+
+            if(user?.role === 'admin') {
+                isAdmin = true;
+            }
+
+            res.status(200).json({isAdmin});
+        })
         
         // ALL POST API
 
@@ -46,7 +84,48 @@ async function run() {
             const user = req.body;            
             const result = await allUsers.insertOne(user);
             res.status(201).json(result);            
+        });
+
+        app.post('/add-blog',upload.single("sportImage"),async(req, res) => {
+            const blog = {
+                ...req.body,
+                productImage: req.file.path,
+            }
+
+            blog.reviewStar = parseInt(blog.reviewStar);
+
+            const result = await allallBlog.insertOne(blog);
+            res.send(result);
         })
+
+        //ALL UPDATE API
+
+        app.patch('/update-blog-status',async(req,res) => {
+            const {blogId} = req.query;
+            const result = await allBlog.updateOne(
+                {
+                    _id: objectId(blogId),
+                },
+                {
+                    $set: {
+                        
+                    }
+                }
+            )
+
+            res.send(result);
+        })
+
+        //ALL DELETE API
+        app.delete('/delete-single-blog', async(req, res) => {
+            const {blogId} = req.query;
+            const result = await allBlog.deleteOne({
+                _id: objectId(blogId),
+            })
+
+            res.send(result);
+        })
+       
     }
     catch(error) {
         console.log(error.message);
