@@ -48,7 +48,7 @@ async function run() {
             else if(page && size) {
                 result = await allBlog.find(
                     {
-                        status: status,
+                        status: 'confirm',
                     }
                 )
                 .skip(page * size)
