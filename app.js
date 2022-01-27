@@ -35,9 +35,7 @@ async function run() {
             const {status} = req.query;
             const {skip} = req.query;
             const {limit} = req.query;
-            let result;
-
-            console.log(status);
+            let result;            
 
             if(status) {
                 result = await allBlog.find({
@@ -47,7 +45,7 @@ async function run() {
 
                 res.send(result);
             }
-            else if(skip && limit && status) {
+            else if(skip && limit) {
                 result = await allBlog.find(
                     {
                         status: status,
@@ -108,7 +106,13 @@ async function run() {
 
         app.patch('/update-blog-status',async(req,res) => {
             const {blogId} = req.query;
-            
+            const filter = {_id: objectId(blogId)};
+            const updateStatus = {
+                $set: {
+                    status: 'confirm',
+                }
+            }
+            const result = await allBlog.updateOne(filter, updateStatus);
 
             res.send(result);
         })
