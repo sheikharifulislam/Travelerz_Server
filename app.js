@@ -33,8 +33,8 @@ async function run() {
 
         app.get('/all-blog', async(req,res) => {
             const {status} = req.query;
-            const {skip} = req.query;
-            const {limit} = req.query;
+            const {page} = req.query;
+            const {size} = req.query;
             let result;            
 
             if(status) {
@@ -45,14 +45,14 @@ async function run() {
 
                 res.send(result);
             }
-            else if(skip && limit) {
+            else if(page && size) {
                 result = await allBlog.find(
                     {
                         status: status,
                     }
                 )
-                .skip(skip)
-                .limit(limit)
+                .skip(page * size)
+                .limit(parseInt(size))
                 .toArray()
 
                 res.send(result);
@@ -145,7 +145,7 @@ async function run() {
             const filter = {email: userEmail};
             const update = {
                 $set: {
-                    role: 'admin',
+                    role: req.body.role,
                 }
             }
             const result = await allUsers.updateOne(filter, update);
