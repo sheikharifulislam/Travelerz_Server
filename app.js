@@ -149,7 +149,7 @@ async function run() {
                 }
             }
             const result = await allUsers.updateOne(filter, update);
-            console.log(result);
+            res.send(result);
         })
 
 
