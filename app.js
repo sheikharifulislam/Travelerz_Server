@@ -140,6 +140,19 @@ async function run() {
         })
 
 
+        app.patch('/add-admin', async (req, res) => {
+            const {userEmail} = req.query;
+            const filter = {email: userEmail};
+            const update = {
+                $set: {
+                    role: 'admin',
+                }
+            }
+            const result = await allUsers.updateOne(filter, update);
+            console.log(result);
+        })
+
+
 
         //ALL DELETE API
         app.delete('/delete-single-blog', async(req, res) => {
