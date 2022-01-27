@@ -109,7 +109,7 @@ async function run() {
             const filter = {_id: objectId(blogId)};
             const updateStatus = {
                 $set: {
-                    status: 'confirm',
+                    status: req.body.newOrderStatus,
                 }
             }
             const result = await allBlog.updateOne(filter, updateStatus);
