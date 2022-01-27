@@ -35,18 +35,20 @@ async function run() {
             const {status} = req.query;
             const {page} = req.query;
             const {size} = req.query;
-            let result;            
+            let blog;
+            const cursor = allBlog.find({});        
+            const count = await cursor.count();            
 
             if(status) {
-                result = await allBlog.find({
+                blog = await allBlog.find({
                     status: status,
                 })
                 .toArray();
 
-                res.send(result);
+                res.send(blog);
             }
             else if(page && size) {
-                result = await allBlog.find(
+                blog = await allBlog.find(
                     {
                         status: 'confirm',
                     }
@@ -55,7 +57,10 @@ async function run() {
                 .limit(parseInt(size))
                 .toArray()
 
-                res.send(result);
+                res.send({
+                    blog,
+                    count,
+                });
             }
         })
 
