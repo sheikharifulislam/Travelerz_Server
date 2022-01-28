@@ -54,7 +54,7 @@ async function run() {
                     }
                 )
                 .skip(page * size)
-                .limit(- parseInt(size))
+                .limit(parseInt(size))
                 .toArray()
 
                 res.send({
